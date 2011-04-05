@@ -51,7 +51,7 @@ def getStory(url):
 def checkStory(story, empresas):
 	results = []
 	for empresa in empresas:
-		hit = story.find(text=re.compile('\s' + empresa[0] + '\s'))
+		hit = story.find(text=re.compile(empresa[0]+'(?=,|\s|\.)'))
 		if (hit):
 			results = results + [empresa]
 	return list(results)
