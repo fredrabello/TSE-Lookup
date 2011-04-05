@@ -51,7 +51,7 @@ def getStory(url):
 def checkStory(story, empresas):
 	results = []
 	for empresa in empresas:
-		hit = story.find(text=re.compile(empresa[0]+'(?=,|\s|\.)'))
+		hit = story.find(text=re.compile(empresa[0]+'\s|' + empresa[0] + ',|' + empresa[0] + '\.'))
 		if (hit):
 			results = results + [empresa]
 	return list(results)
@@ -123,3 +123,4 @@ class jason:
 
 if __name__ == "__main__": app.run()
 
+#application = app.wsgifunc()
