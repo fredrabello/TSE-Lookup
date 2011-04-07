@@ -33,6 +33,17 @@ class Article:
 		print 'Carregando pagina...'
 		unicode(html)
 		story = BeautifulSoup(html)
+		#removing non-useful elements
+		tags = [ 'script', 'li' ]
+		for tag in tags:
+			t = story.findAll(tag)
+			[t1.extract() for t1 in t]
+		attrs = [ "header" , "footer", "sidebar" ]
+		for attr in attrs:
+			t = story.findAll(attrs = { "class" : attr })
+			[t1.extract() for t1 in t]
+			t = story.findAll(attrs = { "id" : attr })
+			[t1.extract() for t1 in t]
 		return story
 
 	def checkStory(self, companies):
@@ -57,7 +68,7 @@ class Article:
 				valor = int(r[2].encode('utf-8').translate(None,'R$.,'))				
 				company['donations'].append(Doacao(r[0], r[1], r[2], r[3], r[4], r[5]))
 				total = valor + total
-			company['total'] = total	
+			company['total'] = toCurrency(total)
 			results.append(company)
 
 		c.close()
@@ -77,7 +88,14 @@ def loadEmpresas(conn):
 	c.close()
 	return results
 
-
-
+def toCurrency(value):
+	value = str(value)
+	t = int((len(value)-2)/3)
+	currency = re.search('([0-9]*)'+'([0-9]{3})'*t+'([0-9]{2})$',value)
+	currency = list(currency.groups())
+	cents = currency.pop()
+	if not currency[0]: currency.pop(0)
+	currency = '.'.join(currency) + ',' + str(cents)
+	return str(currency)
 
 
